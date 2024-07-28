@@ -1,0 +1,11 @@
+node_modules
+.cache
+.conda
+.config
+.dotnet
+.gnupg
+.npm
+.sao
+.ssh
+.vscode-server
+__pycache__

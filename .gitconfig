@@ -1,0 +1,10 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Thiago Carneiro
+	email = trcampos@gmail.com
+[credential]
+	helper = "!f() { /root/.vscode-server/bin/f1e16e1e6214d7c44d078b1f0607b2388f29d729/node /tmp/vscode-remote-containers-61bd4f72-0ca5-4810-b159-a0306477adb9.js git-credential-helper $*; }; f"

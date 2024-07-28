@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@pankod/refine-core": "^3.103.0",
+    "@refinedev/antd": "^5.42.0",
+    "antd": "^5.19.3",
+    "axios": "^1.7.2"
+  }
+}
