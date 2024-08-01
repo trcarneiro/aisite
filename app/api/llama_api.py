@@ -17,8 +17,3 @@ async def generate_article_content(keyword: str, max_tokens: int = 150) -> str:
     response = requests.post(LLAMA_API_URL, headers=headers, json=data)
     response.raise_for_status()
     return response.json().get("choices")[0].get("text")
-
-if 
-
-
-await generate_article_content("kravmaga")

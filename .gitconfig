@@ -7,4 +7,4 @@
 	name = Thiago Carneiro
 	email = trcampos@gmail.com
 [credential]
-	helper = "!f() { /root/.vscode-server/bin/f1e16e1e6214d7c44d078b1f0607b2388f29d729/node /tmp/vscode-remote-containers-61bd4f72-0ca5-4810-b159-a0306477adb9.js git-credential-helper $*; }; f"
+	helper = "!f() { /root/.vscode-server/bin/f1e16e1e6214d7c44d078b1f0607b2388f29d729/node /tmp/vscode-remote-containers-65cf5653-b58d-4680-ae6f-25c368082968.js git-credential-helper $*; }; f"

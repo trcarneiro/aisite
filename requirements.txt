@@ -1,8 +1,9 @@
 fastapi
 uvicorn
 sqlalchemy
-asyncpg
-alembic
-requests
-openai
 asyncmy
+requests
+pydantic
+passlib
+python-jose
+alembic

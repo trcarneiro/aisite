@@ -2,7 +2,16 @@
   "dependencies": {
     "@pankod/refine-core": "^3.103.0",
     "@refinedev/antd": "^5.42.0",
-    "antd": "^5.19.3",
-    "axios": "^1.7.2"
+    "@refinedev/core": "^4.53.0",
+    "@refinedev/devtools": "^1.2.6",
+    "@refinedev/kbar": "^1.3.12",
+    "@refinedev/react-router-v6": "^4.5.11",
+    "@remix-run/node": "^2.10.3",
+    "@remix-run/react": "^2.10.3",
+    "@tanstack/react-query": "^4.36.1",
+    "antd": "^5.19.4",
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "react-router-dom": "^6.25.1"
   }
 }
