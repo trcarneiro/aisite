@@ -1,9 +1,9 @@
 import requests
 
-LLAMA_API_URL = "localhost:11434/v1/completions"
+LLAMA_API_URL = "http://localhost:11434/v1/completions"
 LLAMA_API_KEY = "lm-studio"
 
-async def generate_article_content(keyword: str, max_tokens: int = 150) -> str:
+def generate_article_content(keyword: str, max_tokens: int = 150) -> str:
     headers = {
         "Authorization": f"Bearer {LLAMA_API_KEY}",
         "Content-Type": "application/json",
@@ -18,7 +18,10 @@ async def generate_article_content(keyword: str, max_tokens: int = 150) -> str:
     response.raise_for_status()
     return response.json().get("choices")[0].get("text")
 
-if 
-
-
-await generate_article_content("kravmaga")
+# Teste do endpoint do LLAMA
+if __name__ == "__main__":
+    try:
+        content = generate_article_content("kravmaga")
+        print("Conteúdo gerado:", content)
+    except Exception as e:
+        print("Erro ao gerar conteúdo:", str(e))
