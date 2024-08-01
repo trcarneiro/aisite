@@ -4,7 +4,7 @@
 	process = git-lfs filter-process
 	required = true
 [user]
-	name = Thiago Carneiro
-	email = trcampos@gmail.com
+	name = trcarneiro
+	email = thiago@altostratus.com.br
 [credential]
 	helper = "!f() { /root/.vscode-server/bin/f1e16e1e6214d7c44d078b1f0607b2388f29d729/node /tmp/vscode-remote-containers-8fe9f7ea-754a-46c2-9a45-6e624cb62e32.js git-credential-helper $*; }; f"
