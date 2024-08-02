@@ -2,9 +2,9 @@ import asyncio
 import requests
 from app.database import async_session
 from app.schemas import ProjectCreate, KeywordCreate, ArticleCreate
-from app.crud import create_project, create_keyword, create_article
-from app.services import generate_article_content
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.api import llama_api
+import json
 
 BASE_URL = "http://localhost:8000"
 USERNAME = "trcarneiro"
@@ -23,15 +23,49 @@ async def authenticate():
         print("Failed to authenticate")
         return None
 
-async def create_project_with_keywords(session: AsyncSession, token: str):
+async def create_project_with_keywords_and_articles(session: AsyncSession, token: str):
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
-    
-    # Cria um projeto
-    project_data = ProjectCreate(name="Linux Project", description="Projeto sobre Linux e suas distribuições")
-    project_response = requests.post(f"{BASE_URL}/projects/", json=project_data.dict(), headers=headers)
+
+    # Configurações para o llama_api
+    ip = "192.168.65.254"
+    port = 5555
+    temperature = 0.7
+    max_tokens = 2000
+
+    # Chama o Llama para gerar nome, descrição, público-alvo e estratégia de conteúdo do projeto
+    project = "linuxit.com.br"
+    bussines_type = "website"
+    theme = "Linux News Portal, using wordpress e usando ai para estrategia de conteudo"
+    focusedon = "Website Traffic"
+    Final_Objective = "Return of profit"
+    Project_Language = "PT-BR"
+    Country = "Brazil"
+    how_return_data = "return data always a json with responses"
+
+    prompt_project = f"Return only a name and description based on {project} with {theme} with focus on {focusedon} and objective {Final_Objective} with language {Project_Language} in {Country} and return data always as JSON with responses"
+    print(prompt_project)
+
+    project_response = await llama_api.generate_article_content(ip, port, "/v1/completions", prompt_project, temperature, max_tokens)
+    print(f"Project response: {project_response}")
+
+    # Remove caracteres indesejados da resposta
+    project_response_cleaned = project_response.replace("\n", "").replace("**", "").replace("\\", "")
+    try:
+        # Parse the JSON response from Llama
+        project_data = json.loads(project_response_cleaned)
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON response: {e}")
+        return
+
+    # Cria o projeto no backend
+    project_create_data = ProjectCreate(
+        name=project_data["name"],
+        description=project_data["description"]
+    )
+    project_response = requests.post(f"{BASE_URL}/projects/", json=project_create_data.dict(), headers=headers)
     if project_response.status_code != 200:
         print("Failed to create project")
         return
@@ -40,31 +74,31 @@ async def create_project_with_keywords(session: AsyncSession, token: str):
     project_id = project['id']
     print(f"Project created with ID: {project_id}")
 
-    # Cria palavras-chave baseadas na descrição do projeto
-    keywords = ["Linux tutoriais", "Dicas de Linux", "Comandos Linux", "Distribuições Linux", "Segurança no Linux"]
-    for keyword in keywords:
-        keyword_data = KeywordCreate(word=keyword, project_id=project_id)
-        keyword_response = requests.post(f"{BASE_URL}/keywords/", json=keyword_data.dict(), headers=headers)
-        if keyword_response.status_code != 200:
-            print(f"Failed to create keyword: {keyword}")
-            continue
-        print(f"Keyword '{keyword}' created")
+    # Cria palavras-chave baseadas na estratégia de conteúdo
+    for strategy in project_data["content_strategy"]:
+        for topic in strategy["topics"]:
+            keyword_data = KeywordCreate(word=topic, project_id=project_id)
+            keyword_response = requests.post(f"{BASE_URL}/keywords/", json=keyword_data.dict(), headers=headers)
+            if keyword_response.status_code != 200:
+                print(f"Failed to create keyword: {topic}")
+                continue
+            print(f"Keyword '{topic}' created")
 
-    # Gera conteúdos para as palavras-chave criadas
-    for keyword in keywords:
-        content = await generate_article_content(keyword)
-        article_data = ArticleCreate(title=f"Artigo sobre {keyword}", keyword=keyword, content=content)
-        article_response = requests.post(f"{BASE_URL}/articles/", json=article_data.dict(), headers=headers)
-        if article_response.status_code != 200:
-            print(f"Failed to create article for keyword: {keyword}")
-            continue
-        print(f"Article created for keyword: {keyword}")
+            # Gera o artigo para a palavra-chave
+            prompt_article = f"Escreva um artigo sobre {topic}"
+            article_content = await llama_api.generate_article_content(ip, port, "/v1/completions", prompt_article, temperature, max_tokens)
+            article_create_data = ArticleCreate(title=f"Artigo sobre {topic}", keyword=topic, content=article_content)
+            article_response = requests.post(f"{BASE_URL}/articles/", json=article_create_data.dict(), headers=headers)
+            if article_response.status_code != 200:
+                print(f"Failed to create article for keyword: {topic}")
+                continue
+            print(f"Article created for keyword: {topic}")
 
 async def main():
     token = await authenticate()
     if token:
         async with async_session() as session:
-            await create_project_with_keywords(session, token)
+            await create_project_with_keywords_and_articles(session, token)
     else:
         print("Authentication failed. Exiting.")
 

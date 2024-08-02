@@ -1,19 +1,27 @@
 import requests
 
-LLAMA_API_URL = "localhost:11434/v1/completions"
-LLAMA_API_KEY = "lm-studio"
 
-async def generate_article_content(keyword: str, max_tokens: int = 150) -> str:
+
+
+
+async def generate_article_content(ip: str, port: int, endpoint: str, prompt: str, temperature: float = 0.7, max_tokens: int = 150) -> str:
+    
+    LLAMA_API_URL = f"http://{ip}:{port}{endpoint}"
+    LLAMA_API_KEY = "lm-studio"
     headers = {
         "Authorization": f"Bearer {LLAMA_API_KEY}",
         "Content-Type": "application/json",
     }
     data = {
         "model": "model-identifier",
-        "prompt": f"Escreva um Artigo sobre {keyword}",
-        "temperature": 0.7,
+        "prompt": prompt,
+        "temperature": temperature,
         "max_tokens": max_tokens
     }
-    response = requests.post(LLAMA_API_URL, headers=headers, json=data)
+    
+
+    
+    url = LLAMA_API_URL.format(ip=ip, port=port, endpoint=endpoint)
+    response = requests.post(url, headers=headers, json=data)
     response.raise_for_status()
     return response.json().get("choices")[0].get("text")

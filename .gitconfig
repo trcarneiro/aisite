@@ -7,4 +7,4 @@
 	name = trcarneiro
 	email = thiago@altostratus.com.br
 [credential]
-	helper = "!f() { /root/.vscode-server/bin/f1e16e1e6214d7c44d078b1f0607b2388f29d729/node /tmp/vscode-remote-containers-8fe9f7ea-754a-46c2-9a45-6e624cb62e32.js git-credential-helper $*; }; f"
+	helper = "!f() { /root/.vscode-server/bin/f1e16e1e6214d7c44d078b1f0607b2388f29d729/node /tmp/vscode-remote-containers-9c871932-0e5b-49b9-a0f6-b889abf75a3b.js git-credential-helper $*; }; f"
